@@ -86,7 +86,10 @@ body.overflow {
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  padding: 30px;
+  padding-top: 30px;
+  max-width: 1455px;
+  margin-left: auto;
+  margin-right: auto;
   gap: 15px;
 }
 
