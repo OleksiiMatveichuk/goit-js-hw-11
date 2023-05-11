@@ -13,5 +13,5 @@ const API = axios.create({
 
 export const getImages = async (value, page = 1) => {
   const { data } = await API.get('', { params: { q: value, page } });
-  return data.hits;
+  return data;
 };

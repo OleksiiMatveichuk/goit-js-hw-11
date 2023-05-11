@@ -8,17 +8,18 @@ import { getImages } from './axiosPhotos';
 const form = document.querySelector('.search-form');
 const input = form.querySelector('[name="searchQuery"]');
 const gallery = document.querySelector('.gallery');
-const loadMarkup = `<div class="more">Loading...</div>`;
 const loading = document.querySelector('.more');
-
+loading.style.display = 'none';
 const createResult = async evt => {
   evt.preventDefault();
 
-  const arr = await getImages(input.value);
+  const data = await getImages(input.value);
+  const { hits: arr, totalHits } = data;
 
   gallery.innerHTML = '';
   addMarkup(arr);
-  gallery.insertAdjacentHTML('afterend', loadMarkup);
+  loading.style.display = 'block';
+  // gallery.insertAdjacentHTML('afterend', loadMarkup);
 };
 
 const addMarkup = arr => {
@@ -32,7 +33,7 @@ const addMarkup = arr => {
     .map(
       el =>
         `<div class="photo-card">
-  <a href='${el.largeImageURL}'><img src="${el.webformatURL}" alt="${el.tags} data-img='${el.largeImageURL}' " loading="lazy"  width='350'/></a>
+  <a href='${el.largeImageURL}'><img src="${el.webformatURL}" alt="${el.tags}" data-img='${el.largeImageURL}' " loading="lazy"  width='350'/></a>
   <div class="info">
     <p class="info-item">
       <b>Likes</b>
@@ -56,20 +57,24 @@ const addMarkup = arr => {
     .join('');
   // gallery.innerHTML = result;
   gallery.insertAdjacentHTML('beforeend', result);
+  const lightbox = new SimpleLightbox('.gallery a');
+  lightbox.on('show.simplelightbox');
 };
 
 form.addEventListener('submit', createResult);
 
-// const endlessSrol = async (entr, obs) => {
-//   if (entr[0].isIntersecting) {
-//     const arr = await getImages(input.value, 2);
-//     addMarkup(arr);
-//   }
-// };
-// const observer = new IntersectionObserver(endlessSrol);
-// observer.observe(loading);
+const endlessSrol = async (entr, obs) => {
+  if (entr[0].isIntersecting) {
+    const data = await getImages(input.value, 2);
+    const { hits: arr, totalHits } = data;
+    addMarkup(arr);
+    lightbox.refresh();
+  }
+};
+const observer = new IntersectionObserver(endlessSrol);
+observer.observe(loading);
 
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-});
-lightbox.on('show.simplelightbox', console.log('qwerty :>> ', 'qwerty'));
+// totalHits   Notiflix.Notify.info('We're sorry, but you've reached the end of search results.');
+// obs += 1
+// refresh lightbox
+// than catch
