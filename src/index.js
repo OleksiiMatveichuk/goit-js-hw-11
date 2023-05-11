@@ -73,7 +73,7 @@ const endlessSrol = async (entr, obs) => {
     const data = await getImages(input.value, page);
     const { hits: arr, totalHits } = data;
     console.log('object :>> ', gallery.children.length, totalHits);
-    if (gallery.children.length === totalHits) {
+    if (gallery.children.length === totalHits && page !== 1) {
       loading.style.display = 'none';
       return Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
@@ -84,3 +84,6 @@ const endlessSrol = async (entr, obs) => {
 };
 const observer = new IntersectionObserver(endlessSrol);
 observer.observe(loading);
+
+// при доведенні до кінця, не вибиває повідомлення
+//
